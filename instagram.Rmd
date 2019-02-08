@@ -18,7 +18,9 @@ library(dplyr)
 library(ggplot2)
 library(tidyr)
 
+
 # Loading data into data frame and formatting
+insta_csv <- read.csv("Instagram.csv", header=TRUE, sep=",", as.is=TRUE)
 insta <- read.csv("Instagram.csv", header=TRUE, sep=",", as.is=TRUE)
 insta[1:10,]	# First ten rows
 colnames(insta) <- c("user", "posts", "followers", "following", "likes10", "likes11", "likes12", "self_posts","sex","date")
@@ -33,8 +35,8 @@ par(family = 'avenir')
 
 
 # Plotting in Base R
-plot(insta$following, insta$followers , las=1, xlab="Following",
-ylab="Followers", main="Instagram Users Followers by Gender", col=sex)
+# plot(insta$following, insta$followers , las=1, xlab="Following",
+# ylab="Followers", main="Instagram Users Followers by Gender", col=sex)
 
 # fi_df %>%
 #   group_by(phone,type)%>%
@@ -56,7 +58,8 @@ theme_set(theme_bw())  # pre-set the bw theme.
 data("insta", package = "ggplot2")
 
 # Scatterplot
-gg <- ggplot(insta, aes(x=followers, y=likes10)) +
+gginsta <- insta
+gg <- ggplot(gginsta, aes(x=followers, y=likes10)) +
   geom_point(aes(col=sex,size=posts)) +
   geom_smooth(method="loess", se=F) +
   labs(subtitle="Followers vs Likes",
@@ -66,20 +69,50 @@ gg <- ggplot(insta, aes(x=followers, y=likes10)) +
        caption = "Source: instagram")
 
 plot(gg)
+gg$layers
+gg$layers[[1]]
 
-
-## Getting gender average
+# Getting gender average
 by_gender <- group_by(insta,insta$sex)
 by_gender[1:10,]
 str(by_gender)
 summary(insta)
 
-avg_likes <- insta %>% 
-  group_by(sex) %>% 
+avg_likes <- insta %>%
+  group_by(sex) %>%
   summarise(mean = mean(likes10))
 head(avg_likes)
 
 
+## Barplot
+ggplot(avg_likes, aes(x=sex, y=mean)) +
+  geom_bar(stat="identity", width=.5, fill="tomato3") +
+  labs(title="Followers by Gender",
+       subtitle="Who has more followers on Average",
+       caption="source: insta") +
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+
+
+## Instagram Influencers analysis
+insta$influence_ratio <- insta$followers / insta$following
+#head(insta)
+median(insta$influence_ratio)
+mean(insta$influence_ratio)
+influencers <- subset(insta, insta$influence_ratio > mean(insta$influence_ratio))
+influencers
+
+## Adding columns w mutate
+insta <- mutate(insta, p2f=posts/followers)
+head(insta)
+
+summary(insta)
+
+```
+
+
+ldjasldjaslkdjaslkdjsal
+
+```{r}
 ## Barplot
 ggplot(avg_likes, aes(x=sex, y=mean)) + 
   geom_bar(stat="identity", width=.5, fill="tomato3") + 
@@ -100,7 +133,10 @@ influencers
 ## Adding columns w mutate
 insta <- mutate(insta, p2f=posts/followers)
 head(insta)
-
+```
+Addition example:
+```{r}
+7+7
 ```
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.

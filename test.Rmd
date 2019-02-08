@@ -1,0 +1,21 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Define your variables here:
+
+```{r}
+var1 <- "a"
+var2 <- "abcd"
+var3 <- "abc"
+var4 <- 7
+```
+
+Here's moer tesx
+
+
+```{r}
+var5 <- 22
+```
+
